@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import Footer from './components/Footer';
+import Search from './pages/Search';
 
 function App() {
     return (
@@ -15,8 +16,9 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/sign-in" element={<SignIn />} />
-                <Route path="/sign-out" element={<SignUp />} />
+                <Route path="/sign-up" element={<SignUp />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/search" element={<Search />} />
                 <Route path="/profile" element={<Profile />} />
             </Routes>
             <Footer />
