@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import About from './pages/About';
 import Footer from './components/Footer';
 import Search from './pages/Search';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
     return (
@@ -19,7 +20,9 @@ function App() {
                 <Route path="/sign-up" element={<SignUp />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/search" element={<Search />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route element={<PrivateRoute />}>
+                    <Route path="/profile" element={<Profile />} />
+                </Route>
             </Routes>
             <Footer />
         </BrowserRouter>
