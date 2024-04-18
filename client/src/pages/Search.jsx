@@ -97,13 +97,13 @@ export default function Search() {
                 <h1 className="text-3xl m-5 font-semibold border-b p-3 text-slate-700">
                     Listing result:
                 </h1>
-                <div className="flex gap-4 p-7">
-                    <div className="bg-white flex flex-col gap-4 shadow-md hover:shadow-lg rounded-md overflow-hidden transition-shadow w-full sm:w-[330px] border h-[330px]">
+                <div className="flex flex-wrap gap-4 p-7">
+                    <li className="bg-white flex flex-col gap-4 shadow-md hover:shadow-lg rounded-md overflow-hidden transition-shadow w-full sm:w-[330px] border h-[330px]">
                         This Image
-                    </div>
-                    <div className="bg-white flex flex-col gap-4 shadow-md hover:shadow-lg rounded-md overflow-hidden transition-shadow w-full sm:w-[330px] border h-[330px]">
+                    </li>
+                    <li className="bg-white flex flex-col gap-4 shadow-md hover:shadow-lg rounded-md overflow-hidden transition-shadow w-full sm:w-[330px] border h-[330px]">
                         This Image
-                    </div>
+                    </li>
                 </div>
             </div>
         </div>

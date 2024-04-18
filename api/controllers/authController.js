@@ -90,4 +90,15 @@ const google = async (req, res, next) => {
   }
 };
 
-export { SignUp, signIn, google };
+const signOut = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token");
+
+    res.status(200).json("User has been logged out!");
+  } catch (error) {
+    console.log(error);
+    next(errorHandler(500, error.message));
+  }
+};
+
+export { SignUp, signIn, google, signOut };
