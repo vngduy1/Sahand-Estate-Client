@@ -9,6 +9,7 @@ import About from './pages/About';
 import Footer from './components/Footer';
 import Search from './pages/Search';
 import PrivateRoute from './components/PrivateRoute';
+import CreateListing from './components/CreateListing';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/search" element={<Search />} />
                 <Route element={<PrivateRoute />}>
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/create-listing" element={<CreateListing />} />
                 </Route>
             </Routes>
             <Footer />
