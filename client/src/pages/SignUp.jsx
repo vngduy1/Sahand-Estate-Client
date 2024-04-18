@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
+
 import OAuth from '../components/OAuth';
 
 export default function SignUp() {
     const [formData, setFormData] = useState({});
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [inputs, setInputs] = useState({
+        username: '',
+        email: '',
+        password: '',
+    });
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -55,22 +63,51 @@ export default function SignUp() {
                     className="border p-3 rounded-lg"
                     placeholder="Username"
                     id="username"
-                    onChange={handleChange}
+                    value={inputs.username}
+                    onChange={(e) =>
+                        setInputs((inputs) => ({
+                            ...inputs,
+                            username: e.target.value.trim(),
+                        }))
+                    }
                 />
                 <input
                     type="email"
                     className="border p-3 rounded-lg"
                     id="email"
                     placeholder="Email"
-                    onChange={handleChange}
+                    value={inputs.email}
+                    onChange={(e) =>
+                        setInputs((inputs) => ({
+                            ...inputs,
+                            email: e.target.value.trim(),
+                        }))
+                    }
                 />
-                <input
-                    type="password"
-                    className="border p-3 rounded-lg"
-                    id="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                />
+                <div className="relative">
+                    <input
+                        type={showPassword ? 'text' : 'password'}
+                        className="border p-3 rounded-lg w-full"
+                        id="password"
+                        placeholder="Password"
+                        value={inputs.password}
+                        onChange={(e) =>
+                            setInputs((inputs) => ({
+                                ...inputs,
+                                password: e.target.value.trim(),
+                            }))
+                        }
+                    />
+                    <button
+                        className="absolute top-4 right-3"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setShowPassword((showPassword) => !showPassword);
+                        }}
+                    >
+                        {showPassword ? <IoMdEye /> : <IoMdEyeOff />}
+                    </button>
+                </div>
                 <button
                     disabled={loading}
                     className="flex w-full justify-center bg-slate-700 text-white p-3 rounded-lg 

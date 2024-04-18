@@ -8,21 +8,18 @@ import {
     signInFailure,
 } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
+import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 
 export default function SignIn() {
-    const [formData, setFormData] = useState({});
+    const [inputs, setInputs] = useState({
+        email: '',
+        password: '',
+    });
+    const [showPassword, setShowPassword] = useState(false);
 
     const { loading, error } = useSelector((state) => state.user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    //Onchange Input
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.id]: e.target.value,
-        });
-    };
 
     //Submit form Sign In
     const handleSubmit = async (e) => {
@@ -34,7 +31,7 @@ export default function SignIn() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(inputs),
             });
 
             const data = await res.json();
@@ -55,21 +52,47 @@ export default function SignIn() {
         <div className="p-3 max-w-lg mx-auto">
             <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
 
-            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <form
+                className="flex flex-col gap-4 relative"
+                onSubmit={handleSubmit}
+            >
                 <input
                     type="email"
                     className="border p-3 rounded-lg"
                     id="email"
                     placeholder="Email"
-                    onChange={handleChange}
+                    value={inputs.email}
+                    onChange={(e) =>
+                        setInputs((inputs) => ({
+                            ...inputs,
+                            email: e.target.value.trim(),
+                        }))
+                    }
                 />
-                <input
-                    type="password"
-                    className="border p-3 rounded-lg"
-                    id="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                />
+                <div className="relative">
+                    <input
+                        type={showPassword ? 'text' : 'password'}
+                        className="border p-3 rounded-lg w-full"
+                        id="password"
+                        placeholder="Password"
+                        value={inputs.password}
+                        onChange={(e) =>
+                            setInputs((inputs) => ({
+                                ...inputs,
+                                password: e.target.value.trimStart(),
+                            }))
+                        }
+                    />
+                    <button
+                        className="absolute top-4 right-3"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setShowPassword((showPassword) => !showPassword);
+                        }}
+                    >
+                        {showPassword ? <IoMdEye /> : <IoMdEyeOff />}
+                    </button>
+                </div>
                 <button
                     disabled={loading}
                     className="flex w-full justify-center bg-slate-700 text-white p-3 rounded-lg 
