@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./db/connectDb.js";
 import userRouter from "./routes/user.route.js";
 import authController from "./routes/auth.route.js";
+import listingRouter from "./routes/listingRouter.js";
 
 //connect mongoDB
 connectDB();
@@ -20,6 +21,7 @@ app.use(cookieParser());
 //route
 app.use("/api/user", userRouter);
 app.use("/api/auth", authController);
+app.use("/api/listing", listingRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
