@@ -1,4 +1,5 @@
 import Listing from "../models/listing.model.js";
+import { errorHandler } from "../utils/error.js";
 
 const createListing = async (req, res, next) => {
   try {
@@ -11,37 +12,54 @@ const createListing = async (req, res, next) => {
 };
 
 const updateListing = async (req, res, next) => {
-  if (req.user.id !== req.params.id)
-    return next(errorHandler(401, "You can only update your own account!"));
+  const listing = await Listing.findById(req.params.id);
+
+  if (!listing) return next(errorHandler(404, "Listing not found!"));
+
+  if (req.user.id !== listing.userRef)
+    return next(errorHandler(401, "You can only update your own listings!"));
 
   try {
-    const updatedListing = await User.findByIdAndUpdate(
+    const updatedListing = await Listing.findByIdAndUpdate(
       req.params.id,
-      {
-        $set: {
-          username: req.body.username,
-          name: req.body.name,
-          description: req.body.description,
-          address: req.body.address,
-          regularPrice: req.body.regularPrice,
-          discountPrice: req.body.discountPrice,
-          bathrooms: req.body.bathrooms,
-          bedrooms: req.body.bedrooms,
-          furnished: req.body.furnished,
-          parking: req.body.parking,
-          type: req.body.type,
-          offer: req.body.offer,
-          imageUrls: req.body.imageUrls,
-          userRef: req.body.userRef,
-        },
-      },
+      req.body,
       { new: true }
     );
 
-    return res.status(201).json(listing);
+    res.status(200).json(updatedListing);
+  } catch (error) {
+    console.log("update listing", error);
+    next(error.message);
+  }
+};
+
+const deleteListing = async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+
+  if (!listing) return next(errorHandler(404, "Listing not found!"));
+
+  if (req.user.id !== listing.userRef)
+    return next(errorHandler(401, "You can only delete your own listings!"));
+
+  try {
+    await Listing.findByIdAndDelete(req.params.id);
+    return res.status(201).json("Delete listings successfully!!");
   } catch (error) {
     next(error.message);
   }
 };
 
-export { createListing, updateListing };
+const getListing = async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+
+  if (!listing) return next(errorHandler(404, "Listing not found!"));
+
+  try {
+    return res.status(200).json(listing);
+  } catch (error) {
+    console.log("getListing", error);
+    next(error.message);
+  }
+};
+
+export { createListing, updateListing, deleteListing, getListing };
