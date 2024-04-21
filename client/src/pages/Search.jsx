@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ListingItem from '../components/ListingItem';
 
 export default function Search() {
     const [sidebardata, setSidebardata] = useState({
@@ -15,7 +16,7 @@ export default function Search() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [listings, setListings] = useState([]);
-    console.log(listings);
+    const [showMore, setShowMore] = useState(false);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
@@ -50,9 +51,15 @@ export default function Search() {
         const fetchListings = async () => {
             try {
                 setLoading(true);
+                setShowMore(false);
                 const searchQuery = urlParams.toString();
                 const res = await fetch(`/api/listing/get?${searchQuery}`);
                 const data = await res.json();
+                if (data.length > 0) {
+                    setShowMore(true);
+                } else {
+                    setShowMore(false);
+                }
                 setListings(data);
                 setLoading(false);
             } catch (error) {
@@ -62,7 +69,6 @@ export default function Search() {
         };
 
         fetchListings();
-        // debounced = useDebounce(fetchListings, 500);
     }, [location.search]);
 
     const handleChange = (e) => {
@@ -112,6 +118,22 @@ export default function Search() {
         urlParams.set('order', sidebardata.order);
         const searchQuery = urlParams.toString();
         navigate(`/search?${searchQuery}`);
+    };
+
+    const onShowMoreClick = async () => {
+        const numberOfListings = listings.length;
+        let startIndex = numberOfListings;
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('startIndex', startIndex);
+        const searchQuery = urlParams.toString();
+        const res = await fetch(`/api/listing/get?${searchQuery}`);
+        const data = await res.json();
+
+        if (data.length < 9) {
+            setShowMore(false);
+        }
+
+        setListings([...listings, ...data]);
     };
 
     return (
@@ -244,12 +266,32 @@ export default function Search() {
                     Listing result:
                 </h1>
                 <div className="flex flex-wrap gap-4 p-7">
-                    <li className="bg-white flex flex-col gap-4 shadow-md hover:shadow-lg rounded-md overflow-hidden transition-shadow w-full sm:w-[330px] border h-[330px]">
-                        This Image
-                    </li>
-                    <li className="bg-white flex flex-col gap-4 shadow-md hover:shadow-lg rounded-md overflow-hidden transition-shadow w-full sm:w-[330px] border h-[330px]">
-                        This Image
-                    </li>
+                    {!loading && listings.length === 0 && (
+                        <p className="text-xl text-center text-slate-700">
+                            No listing found!
+                        </p>
+                    )}
+
+                    {loading && (
+                        <p className="text-xl text-slate-700 text-center w-full">
+                            Loading...
+                        </p>
+                    )}
+
+                    {!loading &&
+                        listings?.length > 0 &&
+                        listings.map((listing) => (
+                            <ListingItem key={listing._id} listing={listing} />
+                        ))}
+
+                    {showMore && (
+                        <button
+                            onClick={onShowMoreClick}
+                            className="text-green-700 hover:underline p-7 text-center w-full"
+                        >
+                            Show More
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
