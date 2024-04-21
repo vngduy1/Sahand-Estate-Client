@@ -118,7 +118,8 @@ export default function Listing() {
                                 <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
                                     $
                                     {+listing.regularPrice -
-                                        +listing.discountPrice}
+                                        +listing.discountPrice}{' '}
+                                    OFF
                                 </p>
                             )}
                         </div>
@@ -155,7 +156,7 @@ export default function Listing() {
                             </li>
                         </ul>
                         {currentUser &&
-                            listing.userRef === currentUser._id &&
+                            listing.userRef !== currentUser._id &&
                             !contact && (
                                 <button
                                     onClick={() => setContact(true)}
